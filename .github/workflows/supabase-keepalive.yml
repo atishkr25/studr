@@ -1,0 +1,41 @@
+name: Supabase Keep-Alive
+
+# Free-tier Supabase projects auto-pause after 7 days with no API activity.
+# This pings the project's REST endpoint every 3 days so it never goes idle
+# long enough to trigger that pause.
+on:
+  schedule:
+    - cron: "0 6 */3 * *" # every 3 days at 06:00 UTC
+  workflow_dispatch: {} # allows manual runs from the Actions tab
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Ping Supabase REST endpoint
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
+        run: |
+          if [ -z "$SUPABASE_URL" ] || [ -z "$SUPABASE_ANON_KEY" ]; then
+            echo "Missing SUPABASE_URL or SUPABASE_ANON_KEY repo secrets." >&2
+            exit 1
+          fi
+
+          http_status=$(curl -s -o /tmp/response.txt -w "%{http_code}" \
+            "${SUPABASE_URL%/}/rest/v1/" \
+            -H "apikey: ${SUPABASE_ANON_KEY}" \
+            -H "Authorization: Bearer ${SUPABASE_ANON_KEY}")
+
+          echo "Response status: $http_status"
+          cat /tmp/response.txt
+
+          if [ "$http_status" -lt 200 ] || [ "$http_status" -ge 300 ]; then
+            echo "Supabase ping failed with status $http_status" >&2
+            exit 1
+          fi
+
+          echo "Supabase project pinged successfully."
+
+      - name: Ping deployed app
+        run: curl -sf -o /dev/null -w "App responded with %{http_code}\n" "https://study-room-platform.vercel.app/"
