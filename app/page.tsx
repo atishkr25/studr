@@ -161,7 +161,7 @@ export default async function HomePage() {
       <footer className="w-full bg-[#f9f6f2] border-t border-[#e7e7e7] py-8 px-6 relative z-10">
         <div className="max-w-[1320px] mx-auto flex flex-col md:flex-row justify-between items-center gap-4">
           <span className="text-caption text-[#4e4d4c] font-semibold">
-            © {new Date().getFullYear()} StudyRoom Inc. Digital Architecture by Anand Choubey.
+            © {new Date().getFullYear()} StudyRoom Inc. Digital Architecture by Atish.
           </span>
           <div className="flex items-center gap-6">
             <a 

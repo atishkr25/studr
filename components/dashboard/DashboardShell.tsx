@@ -15,7 +15,7 @@ export function DashboardShell({ children }: DashboardShellProps) {
       
       <footer className="w-full border-t border-[#e7e7e7] pt-8 mt-12 flex flex-col sm:flex-row justify-between items-center gap-4">
         <span className="text-caption text-[#4e4d4c] font-semibold uppercase tracking-wider text-[11px]">
-          Digital Architecture by Anand Choubey
+          Digital Architecture by Atish
         </span>
         <div className="flex items-center gap-6 text-[11px] font-semibold uppercase tracking-wider">
           <a 
