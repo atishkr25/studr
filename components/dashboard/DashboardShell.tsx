@@ -19,7 +19,7 @@ export function DashboardShell({ children }: DashboardShellProps) {
         </span>
         <div className="flex items-center gap-6 text-[11px] font-semibold uppercase tracking-wider">
           <a 
-            href="https://github.com/isitanand" 
+            href="https://github.com/isitAtish"
             target="_blank" 
             rel="noopener noreferrer" 
             className="text-caption text-[#4e4d4c] hover:text-[#141414] flex items-center gap-1.5"
@@ -28,7 +28,7 @@ export function DashboardShell({ children }: DashboardShellProps) {
             GitHub
           </a>
           <a 
-            href="https://instagram.com/aaanand0.0" 
+            href="https://instagram.com/aaatish0.0"
             target="_blank" 
             rel="noopener noreferrer" 
             className="text-caption text-[#4e4d4c] hover:text-[#141414] flex items-center gap-1.5"

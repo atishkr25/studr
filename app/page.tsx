@@ -165,7 +165,7 @@ export default async function HomePage() {
           </span>
           <div className="flex items-center gap-6">
             <a 
-              href="https://github.com/isitanand" 
+              href="https://github.com/isitAtish"
               target="_blank" 
               rel="noopener noreferrer" 
               className="text-caption text-[#4e4d4c] hover:text-[#141414] font-semibold flex items-center gap-1.5"
@@ -174,7 +174,7 @@ export default async function HomePage() {
               GitHub
             </a>
             <a 
-              href="https://instagram.com/aaanand0.0" 
+              href="https://instagram.com/aaatish0.0"
               target="_blank" 
               rel="noopener noreferrer" 
               className="text-caption text-[#4e4d4c] hover:text-[#141414] font-semibold flex items-center gap-1.5"
