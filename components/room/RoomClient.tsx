@@ -347,6 +347,17 @@ export function RoomClient({
 
     if (sessionErr) throw sessionErr
 
+    setActiveSession({
+      id: newSession.id,
+      room_id: newSession.room_id,
+      started_by: newSession.started_by,
+      started_at: newSession.started_at,
+      duration_minutes: Math.round(newSession.duration_seconds / 60),
+      ends_at: newSession.ended_at,
+      status: 'active',
+      created_at: newSession.started_at,
+    })
+
     
     const myMember = members.find((m) => m.userId === currentUser.id)
     const myUsername = myMember?.profile?.username || currentUser.email?.split('@')[0] || 'User'
@@ -388,6 +399,8 @@ export function RoomClient({
       .eq('id', sessionId)
 
     if (updateErr) throw updateErr
+
+    setActiveSession(null)
 
     
     const myMember = members.find((m) => m.userId === currentUser.id)

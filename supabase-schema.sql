@@ -150,17 +150,43 @@ CREATE POLICY "Allow insertion into activity log"
 -- Automatically creates a user profile in public.profiles when a user signs up via Supabase Auth
 CREATE OR REPLACE FUNCTION public.handle_new_user()
 RETURNS TRIGGER AS $$
+DECLARE
+    base_username TEXT;
+    candidate_username TEXT;
+    suffix TEXT;
+    attempt INTEGER := 0;
 BEGIN
-  INSERT INTO public.profiles (id, username, full_name, avatar_url)
-  VALUES (
-    new.id,
-    COALESCE(new.raw_user_meta_data->>'username', split_part(new.email, '@', 1)),
-    new.raw_user_meta_data->>'full_name',
-    new.raw_user_meta_data->>'avatar_url'
-  );
-  RETURN NEW;
+    base_username := lower(trim(COALESCE(new.raw_user_meta_data->>'username', '')));
+
+    IF base_username = '' THEN
+        base_username := 'user_' || substr(replace(new.id::text, '-', ''), 1, 8);
+    END IF;
+
+    LOOP
+        IF attempt = 0 THEN
+            candidate_username := base_username;
+        ELSE
+            suffix := substr(replace(new.id::text, '-', ''), 1, 8) || '_' || attempt::text;
+            candidate_username := base_username || '_' || suffix;
+        END IF;
+
+        INSERT INTO public.profiles (id, username, full_name, avatar_url)
+        VALUES (
+            new.id,
+            candidate_username,
+            new.raw_user_meta_data->>'full_name',
+            new.raw_user_meta_data->>'avatar_url'
+        )
+        ON CONFLICT DO NOTHING;
+
+        IF FOUND OR EXISTS (SELECT 1 FROM public.profiles WHERE id = new.id) THEN
+            RETURN NEW;
+        END IF;
+
+        attempt := attempt + 1;
+    END LOOP;
 END;
-$$ LANGUAGE plpgsql SECURITY DEFINER;
+$$ LANGUAGE plpgsql SECURITY DEFINER SET search_path = public, pg_catalog;
 
 CREATE OR REPLACE TRIGGER on_auth_user_created
   AFTER INSERT ON auth.users

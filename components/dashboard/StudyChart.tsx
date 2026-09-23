@@ -54,7 +54,7 @@ export function StudyChart({ data }: StudyChartProps) {
       </CardHeader>
       <CardContent className="p-5 pt-4">
         <div className="w-full h-[260px]">
-          <ResponsiveContainer width="100%" height="100%">
+          <ResponsiveContainer width="100%" height="100%" minWidth={0} minHeight={260}>
             <BarChart
               data={data}
               margin={{ top: 10, right: 10, left: -20, bottom: 0 }}
