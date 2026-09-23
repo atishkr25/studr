@@ -53,7 +53,7 @@ export default async function RoomPage({ params }: RoomPageProps) {
       .single(),
     supabase
       .from('rooms')
-      .select('id, name, subject, description, invite_code, created_by, is_active, created_at')
+      .select('id, name, subject, description, invite_code, created_by, created_at')
       .eq('id', id)
       .single(),
     supabase
@@ -122,7 +122,7 @@ export default async function RoomPage({ params }: RoomPageProps) {
   }
 
   const room = roomRes.data
-  if (!room || !room.is_active) {
+  if (!room) {
     notFound()
   }
 

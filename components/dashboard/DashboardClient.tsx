@@ -70,17 +70,15 @@ export function DashboardClient({ userId }: DashboardClientProps) {
           role,
           rooms:room_id (
             id, name, description, subject,
-            created_by, invite_code, is_active, created_at
+            created_by, invite_code, created_at
           )
         `)
         .eq('user_id', userId)
 
       if (memberErr) throw memberErr
 
-      // Filter only active rooms
-      const activeRows = ((memberData || []) as any[]).filter(
-        (m) => m.rooms && m.rooms.is_active === true
-      )
+      // The current rooms schema has no soft-delete status column.
+      const activeRows = ((memberData || []) as any[]).filter((m) => m.rooms)
 
       setRoomsJoinedCount(activeRows.length)
 
@@ -278,7 +276,7 @@ export function DashboardClient({ userId }: DashboardClientProps) {
           subject: r.subject as string | null,
           created_by: r.created_by as string,
           invite_code: r.invite_code as string,
-          is_active: r.is_active as boolean,
+          is_active: true,
           created_at: r.created_at as string,
           user_role: mr.role as 'owner' | 'member',
           member_count: allMembers.filter((m) => m.room_id === rId).length,

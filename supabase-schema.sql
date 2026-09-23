@@ -34,6 +34,10 @@ CREATE TABLE public.rooms (
     created_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL
 );
 
+-- Optional soft-delete support for deployments that want to retain deleted rooms.
+-- The application currently uses hard delete because older databases may not have this column.
+ALTER TABLE public.rooms ADD COLUMN IF NOT EXISTS is_active BOOLEAN DEFAULT true NOT NULL;
+
 
 ALTER TABLE public.rooms ENABLE ROW LEVEL SECURITY;
 

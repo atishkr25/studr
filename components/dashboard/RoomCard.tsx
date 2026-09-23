@@ -65,18 +65,20 @@ export function RoomCard({ room, userId, onRefresh }: RoomCardProps) {
   const handleDelete = async () => {
     setActionLoading(true)
     try {
-      const { error } = await supabase
-        .from('rooms')
-        .update({ is_active: false })
-        .eq('id', room.id)
-
-      if (error) throw error
-
-      await supabase.from('activity_log').insert({
+      const { error: logError } = await supabase.from('activity_log').insert({
         room_id: room.id,
         user_id: userId,
         action: 'room_deleted',
       })
+
+      if (logError) throw logError
+
+      const { error } = await supabase
+        .from('rooms')
+        .delete()
+        .eq('id', room.id)
+
+      if (error) throw error
 
       toast.success('Room deleted')
       setDeleteOpen(false)

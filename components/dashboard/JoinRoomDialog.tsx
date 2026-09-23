@@ -42,9 +42,8 @@ export function JoinRoomDialog({ open, onOpenChange, userId, onSuccess }: JoinRo
       // 1. Find room by invite code
       const { data: room, error: roomErr } = await supabase
         .from('rooms')
-        .select('id, name, is_active')
+        .select('id, name')
         .eq('invite_code', inviteCode)
-        .eq('is_active', true)
         .maybeSingle()
 
       if (roomErr) throw roomErr
