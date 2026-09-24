@@ -51,10 +51,10 @@ export async function signupAction(
   _prevState: AuthState,
   formData: FormData
 ): Promise<AuthState> {
-  const email = formData.get('email') as string
+  const email = (formData.get('email') as string)?.trim().toLowerCase()
   const password = formData.get('password') as string
-  const fullName = formData.get('full_name') as string
-  const username = formData.get('username') as string
+  const fullName = (formData.get('full_name') as string)?.trim()
+  const username = (formData.get('username') as string)?.trim().toLowerCase()
 
   if (!email || !password || !username) {
     return { error: 'Email, username, and password are required.' }

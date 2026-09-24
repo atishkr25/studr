@@ -155,6 +155,7 @@ DECLARE
     candidate_username TEXT;
     suffix TEXT;
     attempt INTEGER := 0;
+    inserted_rows INTEGER;
 BEGIN
     base_username := lower(trim(COALESCE(new.raw_user_meta_data->>'username', '')));
 
@@ -177,9 +178,11 @@ BEGIN
             new.raw_user_meta_data->>'full_name',
             new.raw_user_meta_data->>'avatar_url'
         )
-        ON CONFLICT DO NOTHING;
+        ON CONFLICT (username) DO NOTHING;
 
-        IF FOUND OR EXISTS (SELECT 1 FROM public.profiles WHERE id = new.id) THEN
+        GET DIAGNOSTICS inserted_rows = ROW_COUNT;
+
+        IF inserted_rows = 1 OR EXISTS (SELECT 1 FROM public.profiles WHERE id = new.id) THEN
             RETURN NEW;
         END IF;
 
@@ -188,7 +191,9 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql SECURITY DEFINER SET search_path = public, pg_catalog;
 
-CREATE OR REPLACE TRIGGER on_auth_user_created
+DROP TRIGGER IF EXISTS on_auth_user_created ON auth.users;
+
+CREATE TRIGGER on_auth_user_created
   AFTER INSERT ON auth.users
   FOR EACH ROW EXECUTE FUNCTION public.handle_new_user();
 
